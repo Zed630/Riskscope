@@ -1,0 +1,1 @@
+nohup bash infer.sh $1 2>&1 & 

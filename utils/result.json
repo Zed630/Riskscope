@@ -1,0 +1,172 @@
+{
+  "input_file": "/dataset-2041446603085574144/Riskscope/model/v7-20260607-003145/checkpoint-2612/infer_result/20260617-032750.jsonl",
+  "label_file": "/dataset-2041446603085574144/Riskscope/test_data/test_data.jsonl",
+  "dataset_size": 7600,
+  "source_distribution": {
+    "images": {
+      "count": 7600,
+      "ratio": 100.0,
+      "harmful": 3246,
+      "safe": 4354
+    }
+  },
+  "label_distribution": {
+    "Safe": 4354,
+    "Harmful": 3246
+  },
+  "category_distribution": {
+    "Illegal Activities": {
+      "count": 1645,
+      "ratio": 21.644736842105264,
+      "harmful": 810,
+      "harmful_ratio": 49.24012158054711
+    },
+    "Inaccuracy and Unreliability": {
+      "count": 864,
+      "ratio": 11.368421052631579,
+      "harmful": 204,
+      "harmful_ratio": 23.61111111111111
+    },
+    "Infringement of Others' Legal Rights": {
+      "count": 771,
+      "ratio": 10.144736842105264,
+      "harmful": 294,
+      "harmful_ratio": 38.13229571984436
+    },
+    "Violation of Socialist Core Values": {
+      "count": 1360,
+      "ratio": 17.894736842105264,
+      "harmful": 604,
+      "harmful_ratio": 44.41176470588235
+    },
+    "Discriminatory Content": {
+      "count": 783,
+      "ratio": 10.302631578947368,
+      "harmful": 377,
+      "harmful_ratio": 48.148148148148145
+    },
+    "Physical and Mental Health": {
+      "count": 1063,
+      "ratio": 13.98684210526316,
+      "harmful": 593,
+      "harmful_ratio": 55.78551269990592
+    },
+    "Ethics and Morality": {
+      "count": 845,
+      "ratio": 11.118421052631579,
+      "harmful": 354,
+      "harmful_ratio": 41.89349112426036
+    },
+    "Intellectual Property Infringement": {
+      "count": 1086,
+      "ratio": 14.289473684210527,
+      "harmful": 539,
+      "harmful_ratio": 49.6316758747698
+    }
+  },
+  "inference": {
+    "matched": 7600,
+    "parse_fail_treated_as_safe": 32,
+    "binary": {
+      "total": 7600,
+      "tp": 3098,
+      "fp": 545,
+      "fn": 148,
+      "tn": 3809,
+      "acc": 90.88157894736842,
+      "recall": 95.44054220579174,
+      "precision": 85.03980236069174,
+      "f1": 89.94048483088982
+    },
+    "per_category": {
+      "Discriminatory Content": {
+        "total": 783,
+        "tp": 347,
+        "fp": 56,
+        "fn": 30,
+        "tn": 350,
+        "acc": 89.01660280970626,
+        "recall": 92.04244031830238,
+        "precision": 86.10421836228288,
+        "f1": 88.97435897435896
+      },
+      "Ethics and Morality": {
+        "total": 845,
+        "tp": 350,
+        "fp": 45,
+        "fn": 4,
+        "tn": 446,
+        "acc": 94.20118343195266,
+        "recall": 98.87005649717514,
+        "precision": 88.60759493670885,
+        "f1": 93.45794392523365
+      },
+      "Illegal Activities": {
+        "total": 1645,
+        "tp": 790,
+        "fp": 105,
+        "fn": 20,
+        "tn": 730,
+        "acc": 92.40121580547113,
+        "recall": 97.53086419753086,
+        "precision": 88.26815642458101,
+        "f1": 92.66862170087975
+      },
+      "Inaccuracy and Unreliability": {
+        "total": 864,
+        "tp": 198,
+        "fp": 53,
+        "fn": 6,
+        "tn": 607,
+        "acc": 93.17129629629629,
+        "recall": 97.05882352941177,
+        "precision": 78.88446215139442,
+        "f1": 87.03296703296702
+      },
+      "Infringement of Others' Legal Rights": {
+        "total": 771,
+        "tp": 264,
+        "fp": 72,
+        "fn": 30,
+        "tn": 405,
+        "acc": 86.7704280155642,
+        "recall": 89.79591836734694,
+        "precision": 78.57142857142857,
+        "f1": 83.80952380952381
+      },
+      "Intellectual Property Infringement": {
+        "total": 1086,
+        "tp": 505,
+        "fp": 13,
+        "fn": 34,
+        "tn": 534,
+        "acc": 95.67219152854513,
+        "recall": 93.69202226345084,
+        "precision": 97.49034749034749,
+        "f1": 95.55345316934722
+      },
+      "Physical and Mental Health": {
+        "total": 1063,
+        "tp": 585,
+        "fp": 37,
+        "fn": 8,
+        "tn": 433,
+        "acc": 95.76669802445907,
+        "recall": 98.65092748735245,
+        "precision": 94.05144694533763,
+        "f1": 96.2962962962963
+      },
+      "Violation of Socialist Core Values": {
+        "total": 1360,
+        "tp": 577,
+        "fp": 168,
+        "fn": 27,
+        "tn": 588,
+        "acc": 85.66176470588235,
+        "recall": 95.52980132450331,
+        "precision": 77.4496644295302,
+        "f1": 85.54484803558191
+      }
+    }
+  }
+}
