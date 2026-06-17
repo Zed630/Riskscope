@@ -125,7 +125,7 @@ def compute_metrics(tp, fp, fn, tn):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="子集数据构成分析")
+    parser = argparse.ArgumentParser(description="子集数据构成分析 & 通过 infer.jsonl 计算各类别成功率")
     parser.add_argument("--subset", default="/data/Safety/analysis/subset_1.jsonl",
                         help="子集文件 (包含 solution, images, messages)")
     parser.add_argument("--infer", default="/data/Safety/analysis/infer.jsonl",
@@ -133,7 +133,9 @@ def main():
     parser.add_argument("--output", default="/data/Safety/analysis/subset_1_report.json",
                         help="输出 JSON 报告路径")
     parser.add_argument("--csv", default=None,
-                        help="输出 CSV 表格路径 (默认与 JSON 同名但后缀为 .csv)")
+                        help="输出聚合 CSV 表格路径 (默认与 JSON 同名但后缀为 .csv)")
+    parser.add_argument("--detail-csv", default=None,
+                        help="输出详细数据 CSV 路径 (默认与 JSON 同名但后缀为 _detail.csv)")
     args = parser.parse_args()
 
     subset_path = args.subset
@@ -234,13 +236,15 @@ def main():
     all_categories = set()
     matched = 0
     parse_fail = 0
+    detail_rows = []  # 详细数据行，用于导出 detail CSV
     for item in subset_items:
         gt_harmful, gt_cats = parse_solution(item.get("solution"))
         if gt_harmful is None:
             continue
         key = build_key(item)
         pred_harmful = None
-        if key in response_map:
+        has_response = key in response_map
+        if has_response:
             matched += 1
             pred_harmful, _ = parse_response(response_map[key])
         if pred_harmful is None:
@@ -249,6 +253,22 @@ def main():
         gt_cats_set = set(gt_cats)
         all_categories.update(gt_cats_set)
         all_valid.append((gt_harmful, gt_cats_set, pred_harmful))
+
+        # 记录详细数据
+        img_paths = get_image_paths(item)
+        user_content = get_user_content(item)
+        source = get_source_from_image(img_paths[0]) if img_paths else "UNKNOWN"
+        detail_rows.append({
+            "source": source,
+            "image_path": img_paths[0] if img_paths else "",
+            "user_content": user_content,
+            "gt_is_harmful": 1 if gt_harmful else 0,
+            "gt_categories": "; ".join(sorted(gt_cats_set)),
+            "gt_cats_set": gt_cats_set,  # 内部使用，用于 one-hot 列
+            "has_response": 1 if has_response else 0,
+            "pred_is_harmful": 1 if pred_harmful else 0,
+            "match_correct": 1 if (gt_harmful == pred_harmful) else 0,
+        })
 
     all_categories = sorted(all_categories)
     valid_count = len(all_valid)
@@ -374,6 +394,40 @@ def main():
             ])
 
     print(f"    CSV 表格已保存至: {csv_path}")
+
+    # ============ 6. 输出详细数据 CSV (每条数据一行 + 8个类别 one-hot) ============
+    detail_csv_path = args.detail_csv
+    if detail_csv_path is None:
+        detail_csv_path = os.path.splitext(output_path)[0] + "_detail.csv"
+
+    # 表头: 基础字段 + 8个类别列(one-hot)
+    detail_headers = [
+        "数据来源", "图片路径", "用户内容",
+        "真实是否有害", "真实风险类别",
+        "是否匹配到回复", "预测是否有害", "预测是否正确",
+    ] + all_categories
+
+    with open(detail_csv_path, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(detail_headers)
+        for row in detail_rows:
+            gt_cats = row.get("gt_cats_set", set())
+            row_data = [
+                row["source"],
+                row["image_path"],
+                row["user_content"],
+                row["gt_is_harmful"],
+                row["gt_categories"],
+                row["has_response"],
+                row["pred_is_harmful"],
+                row["match_correct"],
+            ]
+            # 8个类别 one-hot 列
+            for cat in all_categories:
+                row_data.append(1 if cat in gt_cats else 0)
+            writer.writerow(row_data)
+
+    print(f"    详细数据 CSV 已保存至: {detail_csv_path}")
     print("=" * 70)
     print("分析完成。")
 
